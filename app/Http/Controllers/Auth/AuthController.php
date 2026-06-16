@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Auth;
 use Hash;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -35,5 +36,12 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return (new UserResource($user))->additional(['token' => $token]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Successfully logged out'], 200);
     }
 }
