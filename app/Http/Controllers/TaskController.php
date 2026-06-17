@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,14 @@ class TaskController extends Controller
     public function show(Request $request, $id)
     {
         $task = $request->user()->tasks()->findOrFail($id);
+
+        return new TaskResource($task);
+    }
+
+    public function update(UpdateTaskRequest $request, $id)
+    {
+        $task = $request->user()->tasks()->findOrFail($id);
+        $task->update($request->validated());
 
         return new TaskResource($task);
     }
