@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -13,5 +14,11 @@ class TaskController extends Controller
         $task = $request->user()->tasks()->create($task_data);
 
         return new TaskResource($task);
+    }
+
+    public function index(Request $request){
+        $tasks = $request->user()->tasks;
+
+        return TaskResource::collection($tasks);
     }
 }
