@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TaskEnum: string
+enum TaskStatus: string
 {
     case PENDING = "pending";
     case COMPLETED = "completed";

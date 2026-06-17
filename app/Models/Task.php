@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\TaskEnum;
+use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,13 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Task extends Model
 {
     protected $attributes = [
-        'status' => TaskEnum::PENDING,
+        'status' => TaskStatus::PENDING,
     ];
 
     protected function casts(): array
     {
         return [
-            'status' => TaskEnum::class,
+            'status' => TaskStatus::class,
             'due_date' => 'datetime',
         ];
     }
