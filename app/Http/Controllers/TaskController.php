@@ -16,9 +16,17 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $tasks = $request->user()->tasks;
 
         return TaskResource::collection($tasks);
+    }
+
+    public function show(Request $request, $id)
+    {
+        $task = $request->user()->tasks()->findOrFail($id);
+
+        return new TaskResource($task);
     }
 }
