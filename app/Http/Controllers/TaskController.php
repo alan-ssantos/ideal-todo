@@ -19,8 +19,18 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-        $tasks = $request->user()->tasks;
+        // 1. Iniciamos a consulta a partir das tarefas do usuário
+        $query = $request->user()->tasks();
 
+        // 2. Se houver um status na query string, aplicamos o filtro
+        if ($request->has('status')) {
+            $query->where('status', $request->query('status'));
+        }
+
+        // 3. Pagina os resultados (ex: 10 por página) em vez de trazer todos
+        $tasks = $query->paginate(10);
+
+        // 4. Retorna a coleção paginada
         return TaskResource::collection($tasks);
     }
 
