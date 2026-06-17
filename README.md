@@ -1,58 +1,225 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Ideal Todo API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API REST para gerenciamento de tarefas (to-do list) com autenticação de usuários utilizando Laravel + Sanctum.
 
-## About Laravel
+## ✅ O que a API oferece
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Registro e login de usuários
+- Logout com invalidação do token atual
+- CRUD completo de tarefas por usuário autenticado
+- Filtro de tarefas por status via query string
+- Validação de entrada com Form Requests
+- Respostas JSON padronizadas com API Resources
+- Seed com usuários e tarefas de exemplo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🧱 Tecnologias utilizadas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.3+
+- Laravel 13
+- Sanctum
+- SQLite (configuração padrão) ou MySQL
+- Pest para testes
 
-## Learning Laravel
+## 📋 Pré-requisitos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Composer
+- PHP 8.3+
+- Node.js e npm
+- Banco de dados SQLite ou MySQL
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Instalação
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+1. Clone o repositório:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <url-do-repositorio>
+cd ideal-todo
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. Instale as dependências PHP:
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Copie o arquivo de ambiente e configure as variáveis:
 
-## Code of Conduct
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. Gere a chave da aplicação:
 
-## Security Vulnerabilities
+```bash
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Execute as migrations e seeders:
 
-## License
+```bash
+php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## ▶️ Como rodar o projeto
+
+### API
+
+```bash
+php artisan serve
+```
+
+A API ficará disponível em:
+
+```text
+http://localhost:8000
+```
+
+### Frontend/Vite (se necessário)
+
+```bash
+npm run dev
+```
+
+## 🔐 Endpoints da API
+
+### Autenticação
+
+#### Registro
+
+```http
+POST /api/register
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "password": "12345678",
+  "password_confirmation": "12345678"
+}
+```
+
+#### Login
+
+```http
+POST /api/login
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "email": "joao@email.com",
+  "password": "12345678"
+}
+```
+
+Resposta esperada:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "João Silva",
+    "email": "joao@email.com"
+  },
+  "token": "..."
+}
+```
+
+#### Logout
+
+```http
+POST /api/logout
+Authorization: Bearer <token>
+```
+
+### Tarefas
+
+#### Listar tarefas
+
+```http
+GET /api/tasks?status=pendente
+Authorization: Bearer <token>
+```
+
+#### Buscar tarefa pelo ID
+
+```http
+GET /api/tasks/{id}
+Authorization: Bearer <token>
+```
+
+#### Criar tarefa
+
+```http
+POST /api/tasks
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "title": "Comprar leite",
+  "description": "Passar no mercado depois do trabalho",
+  "due_date": "2026-06-18 18:00:00",
+  "status": "pending"
+}
+```
+
+#### Atualizar tarefa
+
+```http
+PUT /api/tasks/{id}
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "title": "Comprar pão",
+  "status": "completed"
+}
+```
+
+#### Deletar tarefa
+
+```http
+DELETE /api/tasks/{id}
+Authorization: Bearer <token>
+```
+
+## 🧪 Testes
+
+Para rodar a suíte de testes:
+
+```bash
+php artisan test
+```
+
+O projeto já inclui testes para verificar:
+
+- criação de tarefa por usuário autenticado
+- negação de acesso a tarefa de outro usuário
+
+## 🌱 Seeders
+
+O seeder principal cria:
+
+- pelo menos 2 usuários
+- 5 tarefas de exemplo
+
+## 📌 Observações importantes
+
+- A autenticação é feita com Sanctum.
+- Cada usuário só consegue acessar suas próprias tarefas.
+- O status da tarefa deve ser `pending` ou `completed`.
+- A data de vencimento deve seguir o formato `Y-m-d H:i:s`.
